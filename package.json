@@ -1,0 +1,76 @@
+{
+	"name": "@vvelediaz/ionic-pdf-viewer",
+	"version": "1.0.0",
+	"description": "A modern React PDF viewer component built with Ionic Framework featuring zoom controls, page navigation, and responsive design",
+	"type": "module",
+	"main": "./mod.ts",
+	"module": "./mod.ts",
+	"types": "./mod.ts",
+	"exports": {
+		".": {
+			"types": "./mod.ts",
+			"import": "./mod.ts"
+		},
+		"./types": "./src/types/pdf.ts",
+		"./css": "./src/components/PDFViewer.css"
+	},
+	"files": [
+		"mod.ts",
+		"src/",
+		"README.md",
+		"LICENSE"
+	],
+	"keywords": [
+		"react",
+		"pdf",
+		"viewer",
+		"ionic",
+		"typescript",
+		"component",
+		"zoom",
+		"navigation",
+		"responsive"
+	],
+	"author": "Your Name <your.email@example.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yourusername/ionic-pdf-viewer.git"
+	},
+	"homepage": "https://github.com/yourusername/ionic-pdf-viewer#readme",
+	"bugs": {
+		"url": "https://github.com/yourusername/ionic-pdf-viewer/issues"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc",
+		"build:lib": "tsc && cp src/components/PDFViewer.css dist/src/components/",
+		"preview": "vite preview",
+		"type-check": "tsc --noEmit",
+		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+		"prepublish": "bun run build:lib"
+	},
+	"peerDependencies": {
+		"react": ">=18.0.0",
+		"react-dom": ">=18.0.0",
+		"@ionic/react": ">=8.0.0",
+		"ionicons": ">=8.0.0"
+	},
+	"dependencies": {
+		"react-pdf": "^7.5.1"
+	},
+	"devDependencies": {
+		"@types/react": "^18.2.0",
+		"@types/react-dom": "^18.2.0",
+		"@vitejs/plugin-react": "^4.0.0",
+		"typescript": "^5.0.0",
+		"vite": "^4.3.0",
+		"@ionic/core": "^8.6.1",
+		"@ionic/react": "^8.6.1",
+		"@ionic/react-router": "^8.6.1",
+		"ionicons": "^8.0.9",
+		"mammoth": "^1.9.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	}
+}

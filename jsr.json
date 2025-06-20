@@ -1,0 +1,22 @@
+{
+	"name": "@vvelediaz/ionic-pdf-viewer",
+	"version": "1.0.0",
+	"exports": {
+		".": "./mod.ts",
+		"./types": "./src/types/pdf.ts"
+	},
+	"publish": {
+		"exclude": [
+			"public/**",
+			"index.html",
+			"src/main.tsx",
+			"src/App.tsx",
+			"src/App.css",
+			"src/index.css",
+			"src/components/PDFViewer.css",
+			"vite.config.ts",
+			"ionic.config.json",
+			"index.ts"
+		]
+	}
+}

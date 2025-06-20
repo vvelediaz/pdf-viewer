@@ -1,0 +1,287 @@
+/* Ionic Variables and Overrides */
+:root {
+	/* Ionic CSS Custom Properties */
+	--ion-color-primary: #3880ff;
+	--ion-color-primary-rgb: 56, 128, 255;
+	--ion-color-primary-contrast: #ffffff;
+	--ion-color-primary-contrast-rgb: 255, 255, 255;
+	--ion-color-primary-shade: #3171e0;
+	--ion-color-primary-tint: #4c8dff;
+
+	--ion-color-secondary: #3dc2ff;
+	--ion-color-secondary-rgb: 61, 194, 255;
+	--ion-color-secondary-contrast: #ffffff;
+	--ion-color-secondary-contrast-rgb: 255, 255, 255;
+	--ion-color-secondary-shade: #36abe0;
+	--ion-color-secondary-tint: #50c8ff;
+
+	--ion-color-tertiary: #5260ff;
+	--ion-color-tertiary-rgb: 82, 96, 255;
+	--ion-color-tertiary-contrast: #ffffff;
+	--ion-color-tertiary-contrast-rgb: 255, 255, 255;
+	--ion-color-tertiary-shade: #4854e0;
+	--ion-color-tertiary-tint: #6370ff;
+
+	--ion-color-success: #2dd36f;
+	--ion-color-success-rgb: 45, 211, 111;
+	--ion-color-success-contrast: #ffffff;
+	--ion-color-success-contrast-rgb: 255, 255, 255;
+	--ion-color-success-shade: #28ba62;
+	--ion-color-success-tint: #42d77d;
+
+	--ion-color-warning: #ffc409;
+	--ion-color-warning-rgb: 255, 196, 9;
+	--ion-color-warning-contrast: #000000;
+	--ion-color-warning-contrast-rgb: 0, 0, 0;
+	--ion-color-warning-shade: #e0ac08;
+	--ion-color-warning-tint: #ffca22;
+
+	--ion-color-danger: #eb445a;
+	--ion-color-danger-rgb: 235, 68, 90;
+	--ion-color-danger-contrast: #ffffff;
+	--ion-color-danger-contrast-rgb: 255, 255, 255;
+	--ion-color-danger-shade: #cf3c4f;
+	--ion-color-danger-tint: #ed576b;
+
+	--ion-color-medium: #92949c;
+	--ion-color-medium-rgb: 146, 148, 156;
+	--ion-color-medium-contrast: #ffffff;
+	--ion-color-medium-contrast-rgb: 255, 255, 255;
+	--ion-color-medium-shade: #808289;
+	--ion-color-medium-tint: #9d9fa6;
+
+	--ion-color-light: #f4f5f8;
+	--ion-color-light-rgb: 244, 245, 248;
+	--ion-color-light-contrast: #000000;
+	--ion-color-light-contrast-rgb: 0, 0, 0;
+	--ion-color-light-shade: #d7d8da;
+	--ion-color-light-tint: #f5f6f9;
+
+	--ion-color-dark: #222428;
+	--ion-color-dark-rgb: 34, 36, 40;
+	--ion-color-dark-contrast: #ffffff;
+	--ion-color-dark-contrast-rgb: 255, 255, 255;
+	--ion-color-dark-shade: #1e2023;
+	--ion-color-dark-tint: #383a3e;
+}
+
+/* Dark theme overrides */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--ion-color-primary: #428cff;
+		--ion-color-primary-rgb: 66, 140, 255;
+		--ion-color-primary-contrast: #ffffff;
+		--ion-color-primary-contrast-rgb: 255, 255, 255;
+		--ion-color-primary-shade: #3a7be0;
+		--ion-color-primary-tint: #5598ff;
+
+		--ion-color-secondary: #50c8ff;
+		--ion-color-secondary-rgb: 80, 200, 255;
+		--ion-color-secondary-contrast: #ffffff;
+		--ion-color-secondary-contrast-rgb: 255, 255, 255;
+		--ion-color-secondary-shade: #46b0e0;
+		--ion-color-secondary-tint: #62ceff;
+
+		--ion-color-light: #1e1e1e;
+		--ion-color-light-rgb: 30, 30, 30;
+		--ion-color-light-contrast: #ffffff;
+		--ion-color-light-contrast-rgb: 255, 255, 255;
+		--ion-color-light-shade: #1a1a1a;
+		--ion-color-light-tint: #353535;
+
+		--ion-color-medium: #989aa2;
+		--ion-color-medium-rgb: 152, 154, 162;
+		--ion-color-medium-contrast: #000000;
+		--ion-color-medium-contrast-rgb: 0, 0, 0;
+		--ion-color-medium-shade: #86888f;
+		--ion-color-medium-tint: #a2a4ab;
+
+		--ion-color-dark: #f4f5f8;
+		--ion-color-dark-rgb: 244, 245, 248;
+		--ion-color-dark-contrast: #000000;
+		--ion-color-dark-contrast-rgb: 0, 0, 0;
+		--ion-color-dark-shade: #d7d8da;
+		--ion-color-dark-tint: #f5f6f9;
+	}
+}
+
+/* Global app styles */
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+	height: 100%;
+	width: 100%;
+}
+
+/* Ensure Ionic components work properly */
+ion-content {
+	--background: var(--ion-color-light);
+}
+
+/* Custom scrollbar for Ionic content */
+ion-content::-webkit-scrollbar {
+	width: 6px;
+}
+
+ion-content::-webkit-scrollbar-track {
+	background: var(--ion-color-light-shade);
+}
+
+ion-content::-webkit-scrollbar-thumb {
+	background: var(--ion-color-medium);
+	border-radius: 3px;
+}
+
+ion-content::-webkit-scrollbar-thumb:hover {
+	background: var(--ion-color-medium-shade);
+}
+
+/* Error boundary styles */
+.error-boundary {
+	margin: 16px;
+}
+
+.error-boundary-content {
+	text-align: center;
+	padding: 20px;
+}
+
+/* Make sure text is readable on all platforms */
+.ion-text-wrap {
+	white-space: normal !important;
+}
+
+/* Platform-specific adjustments */
+.ios,
+:root {
+	--ion-header-background: var(--ion-color-light);
+	--ion-toolbar-background: var(--ion-color-light);
+}
+
+.md {
+	--ion-header-background: var(--ion-color-primary);
+	--ion-toolbar-background: var(--ion-color-primary);
+	--ion-toolbar-color: var(--ion-color-primary-contrast);
+}
+
+/* Browser defaults to iOS design */
+.plt-desktop {
+	--ion-header-background: var(--ion-color-light);
+	--ion-toolbar-background: var(--ion-color-light);
+}
+
+/* Document management specific styles */
+.selected-document {
+	--background: var(--ion-color-primary-tint);
+	--color: var(--ion-color-primary-contrast);
+	border-left: 4px solid var(--ion-color-primary);
+	font-weight: 500;
+}
+
+/* Menu styling */
+ion-menu ion-content {
+	--background: var(--ion-color-light);
+}
+
+/* Footer styling */
+ion-footer ion-toolbar {
+	--background: var(--ion-color-dark);
+	--color: var(--ion-color-dark-contrast);
+	padding: 8px 0;
+}
+
+ion-footer a {
+	color: var(--ion-color-primary-tint);
+	text-decoration: none;
+	margin: 0 4px;
+}
+
+ion-footer a:hover {
+	color: var(--ion-color-primary);
+	text-decoration: underline;
+}
+
+/* Split pane adjustments */
+ion-split-pane {
+	--border: 1px solid var(--ion-color-medium-tint);
+}
+
+/* Card enhancements */
+ion-card {
+	margin: 8px;
+	border-radius: 12px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge positioning in accordion headers */
+ion-accordion ion-item[slot="header"] ion-badge {
+	margin-left: auto;
+}
+
+/* Document item styling */
+ion-accordion[slot="content"] ion-item {
+	--padding-start: 32px;
+	--min-height: 56px;
+}
+
+ion-accordion[slot="content"] ion-item ion-label h3 {
+	font-size: 14px;
+	font-weight: 500;
+	margin: 2px 0;
+}
+
+ion-accordion[slot="content"] ion-item ion-label p {
+	font-size: 12px;
+	color: var(--ion-color-medium);
+	margin: 2px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+	ion-card {
+		margin: 4px;
+	}
+
+	ion-footer ion-text {
+		font-size: 12px;
+	}
+
+	ion-footer h6 {
+		font-size: 14px;
+		margin: 4px 0;
+	}
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+	* {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* Print styles */
+@media print {
+
+	ion-header,
+	ion-footer,
+	ion-menu,
+	.pdf-controls {
+		display: none !important;
+	}
+
+	ion-content {
+		--background: white;
+	}
+}
