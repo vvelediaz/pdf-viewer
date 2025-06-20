@@ -15,6 +15,7 @@ A modern, feature-rich React PDF viewer component built with Ionic Framework. Pe
 - 🎨 **Modern UI** - Clean, accessible interface with Ionic design system
 - 🔧 **TypeScript Support** - Fully typed for better development experience
 - 🌐 **Cross Platform** - Works on iOS, Android, and web platforms
+- ⚛️ **React 19 Ready** - Fully compatible with React 18 and 19
 
 ## 📦 Installation
 
@@ -200,7 +201,7 @@ You can override styles using CSS custom properties or by providing a custom `cl
 
 ## 🔧 Requirements
 
-- React 18+
+- React 18+ or 19+
 - Ionic React 8+
 - Modern browser with PDF.js support
 
