@@ -1,6 +1,6 @@
 # Publishing Guide
 
-This guide explains how to publish the `@vvelediaz/ionic-pdf-viewer` package to JSR and npm.
+This guide explains how to publish the `@vvelediaz/react-pdf-viewer` package to JSR and npm.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ This guide explains how to publish the `@vvelediaz/ionic-pdf-viewer` package to 
 #### Update `jsr.json`
 ```json
 {
-  "name": "@vvelediaz/ionic-pdf-viewer",
+  "name": "@vvelediaz/react-pdf-viewer",
   "version": "1.0.0"
 }
 ```
@@ -24,15 +24,15 @@ Replace `@vvelediaz` with your actual JSR scope name.
 #### Update `package.json`
 ```json
 {
-  "name": "@vvelediaz/ionic-pdf-viewer",
+  "name": "@vvelediaz/react-pdf-viewer",
   "author": "Your Name <your.email@example.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/ionic-pdf-viewer.git"
+    "url": "https://github.com/yourusername/react-pdf-viewer.git"
   },
-  "homepage": "https://github.com/yourusername/ionic-pdf-viewer#readme",
+  "homepage": "https://github.com/yourusername/react-pdf-viewer#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/ionic-pdf-viewer/issues"
+    "url": "https://github.com/yourusername/react-pdf-viewer/issues"
   }
 }
 ```
@@ -143,7 +143,7 @@ jsr publish
 ### Getting Help
 
 - [JSR Documentation](https://jsr.io/docs)
-- [GitHub Issues](https://github.com/yourusername/ionic-pdf-viewer/issues)
+- [GitHub Issues](https://github.com/yourusername/react-pdf-viewer/issues)
 
 ## Checklist
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { PDFViewer } from '@vvelediaz/ionic-pdf-viewer'
+import { PDFViewer } from '@vvelediaz/react-pdf-viewer'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 // Note: Copy PDFViewer.css from the GitHub repo to your project

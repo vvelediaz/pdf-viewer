@@ -1,21 +1,22 @@
-# @vvelediaz/ionic-pdf-viewer
+# @vvelediaz/react-pdf-viewer
 
-A modern, feature-rich React PDF viewer component built with Ionic Framework. Perfect for mobile and desktop applications requiring PDF display capabilities.
+A modern, feature-rich React PDF viewer component with a classic Mac OS X Aqua interface. Perfect for desktop and web applications requiring elegant PDF display capabilities.
 
-[![JSR](https://jsr.io/badges/@vvelediaz/ionic-pdf-viewer)](https://jsr.io/@vvelediaz/ionic-pdf-viewer)
+[![JSR](https://jsr.io/badges/@vvelediaz/react-pdf-viewer)](https://jsr.io/@vvelediaz/react-pdf-viewer)
 
 ## ✨ Features
 
 - 📄 **Universal PDF Support** - Display PDFs from URLs, File objects, or ArrayBuffers
 - 🔍 **Advanced Zoom Controls** - Zoom from 50% to 300% with smooth scaling
-- 📱 **Responsive Design** - Optimized for mobile and desktop with Ionic Framework
+- 🖥️ **Classic Mac OS X Aqua Design** - Authentic Aqua interface with brushed metal toolbars
 - ⬅️➡️ **Page Navigation** - Intuitive page controls with jump-to-page functionality
 - 📜 **Multiple View Modes** - Single page or continuous scroll viewing
 - ⚡ **High Performance** - Efficient rendering with react-pdf
-- 🎨 **Modern UI** - Clean, accessible interface with Ionic design system
+- 🎨 **Beautiful UI** - Classic Mac interface with proper gradients, shadows, and typography
 - 🔧 **TypeScript Support** - Fully typed for better development experience
-- 🌐 **Cross Platform** - Works on iOS, Android, and web platforms
+- 🌐 **Cross Platform** - Works on all modern browsers and desktop applications
 - ⚛️ **React 19 Ready** - Fully compatible with React 18 and 19
+- 🎯 **Minimal Dependencies** - Only essential dependencies for maximum compatibility
 
 ## 📦 Installation
 
@@ -23,32 +24,32 @@ A modern, feature-rich React PDF viewer component built with Ionic Framework. Pe
 
 ```bash
 # Deno
-deno add @vvelediaz/ionic-pdf-viewer
+deno add @vvelediaz/react-pdf-viewer
 
 # npm
-npx jsr add @vvelediaz/ionic-pdf-viewer
+npx jsr add @vvelediaz/react-pdf-viewer
 
 # Yarn
-yarn dlx jsr add @vvelediaz/ionic-pdf-viewer
+yarn dlx jsr add @vvelediaz/react-pdf-viewer
 
 # pnpm
-pnpm dlx jsr add @vvelediaz/ionic-pdf-viewer
+pnpm dlx jsr add @vvelediaz/react-pdf-viewer
 
 # Bun
-bunx jsr add @vvelediaz/ionic-pdf-viewer
+bunx jsr add @vvelediaz/react-pdf-viewer
 ```
 
 ### Using npm
 
 ```bash
-npm install @vvelediaz/ionic-pdf-viewer
+npm install @vvelediaz/react-pdf-viewer
 ```
 
 ## 🚀 Quick Start
 
 ```tsx
 import React from 'react'
-import { PDFViewer } from '@vvelediaz/ionic-pdf-viewer'
+import { PDFViewer } from '@vvelediaz/react-pdf-viewer'
 
 // Import required CSS files
 import 'react-pdf/dist/Page/AnnotationLayer.css'
@@ -105,7 +106,7 @@ import type {
   PDFPageProxy,
   PDFLoadSuccess,
   PDFError 
-} from '@vvelediaz/ionic-pdf-viewer/types'
+} from '@vvelediaz/react-pdf-viewer/types'
 ```
 
 ## 🛠️ Advanced Usage
@@ -114,8 +115,7 @@ import type {
 
 ```tsx
 import React, { useState } from 'react'
-import { PDFViewer } from '@vvelediaz/ionic-pdf-viewer'
-import { IonButton, IonInput } from '@ionic/react'
+import { PDFViewer } from '@vvelediaz/react-pdf-viewer'
 
 function PDFUploader() {
   const [pdfFile, setPdfFile] = useState<File | null>(null)
@@ -128,11 +128,11 @@ function PDFUploader() {
   }
 
   return (
-    <>
-      <IonInput 
+    <div>
+      <input 
         type="file" 
         accept=".pdf"
-        onIonChange={handleFileChange}
+        onChange={handleFileChange}
       />
       {pdfFile && (
         <PDFViewer 
@@ -141,7 +141,7 @@ function PDFUploader() {
           scrollMode="continuous"
         />
       )}
-    </>
+    </div>
   )
 }
 ```
@@ -150,8 +150,7 @@ function PDFUploader() {
 
 ```tsx
 import React, { useState } from 'react'
-import { PDFViewer } from '@vvelediaz/ionic-pdf-viewer'
-import { IonAlert } from '@ionic/react'
+import { PDFViewer } from '@vvelediaz/react-pdf-viewer'
 
 function PDFWithErrorHandling() {
   const [error, setError] = useState<string | null>(null)
@@ -161,26 +160,33 @@ function PDFWithErrorHandling() {
   }
 
   return (
-    <>
+    <div>
       <PDFViewer 
         file="/path/to/document.pdf"
         onLoadError={handleError}
       />
-      <IonAlert
-        isOpen={!!error}
-        onDidDismiss={() => setError(null)}
-        header="Error"
-        message={error}
-        buttons={['OK']}
-      />
-    </>
+      {error && (
+        <div className="error-message">
+          <h3>Error</h3>
+          <p>{error}</p>
+          <button onClick={() => setError(null)}>Dismiss</button>
+        </div>
+      )}
+    </div>
   )
 }
 ```
 
 ## 🎨 Styling
 
-The component comes with built-in Ionic styling. Import the required CSS files:
+The component features a beautiful classic Mac OS X Aqua interface with:
+
+- **Brushed Metal Toolbars** - Authentic metal texture with subtle striped patterns
+- **Classic Aqua Buttons** - Proper gradients, shadows, and hover effects
+- **Blue Aqua Scrollbars** - Traditional Mac scrollbar styling
+- **Lucida Grande Typography** - System font matching the classic Mac experience
+
+Import the required CSS files:
 
 ```tsx
 // Required react-pdf styles for proper PDF rendering
@@ -188,22 +194,21 @@ import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 ```
 
-**Note**: Since JSR doesn't support CSS modules, you'll need to copy the component styles manually. You can find the CSS file in the [GitHub repository](https://github.com/yourusername/ionic-pdf-viewer/blob/main/src/components/PDFViewer.css) and include it in your project.
+**Note**: Since JSR doesn't support CSS modules, you'll need to copy the component styles manually. You can find the CSS file in the [GitHub repository](https://github.com/yourusername/react-pdf-viewer/blob/main/src/components/PDFViewer.css) and include it in your project.
 
 You can override styles using CSS custom properties or by providing a custom `className`.
 
 ## 📱 Platform Support
 
-- **iOS** - Native app or PWA
-- **Android** - Native app or PWA  
-- **Web** - All modern browsers
-- **Desktop** - Electron apps
+- **Web** - All modern browsers (Chrome, Firefox, Safari, Edge)
+- **Desktop** - Electron apps, Tauri apps, and other desktop frameworks
+- **PWA** - Progressive Web Applications
 
 ## 🔧 Requirements
 
 - React 18+ or 19+
-- Ionic React 8+
 - Modern browser with PDF.js support
+- No additional UI framework dependencies
 
 ## 🤝 Contributing
 
@@ -215,7 +220,6 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🔗 Links
 
-- [JSR Package](https://jsr.io/@vvelediaz/ionic-pdf-viewer)
-- [GitHub Repository](https://github.com/yourusername/ionic-pdf-viewer)
-- [Ionic Framework](https://ionicframework.com/)
+- [JSR Package](https://jsr.io/@vvelediaz/react-pdf-viewer)
+- [GitHub Repository](https://github.com/yourusername/react-pdf-viewer)
 - [React PDF](https://github.com/wojtekmaj/react-pdf)
