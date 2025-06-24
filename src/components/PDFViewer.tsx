@@ -1,26 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import {
-	IonButton,
-	IonIcon,
-	IonInput,
-	IonProgressBar,
-	IonText,
-	IonToolbar,
-	IonButtons,
-	IonCard,
-	IonCardContent
-} from '@ionic/react'
-import {
-	chevronBack,
-	chevronForward,
-	removeOutline,
-	addOutline,
-	homeOutline,
-	refreshOutline,
-	readerOutline,
-	listOutline
-} from 'ionicons/icons'
 import { PDFViewerProps, PDFLoadSuccess } from '../types/pdf'
 
 // Set up the worker for react-pdf with CDN fallback
@@ -47,9 +26,6 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 	const [fileUrl, setFileUrl] = useState<string | File | ArrayBuffer | null>(null)
 	const [currentVisiblePage, setCurrentVisiblePage] = useState<number>(1)
 	const [currentScrollMode, setCurrentScrollMode] = useState<'page' | 'continuous'>(scrollMode)
-
-	// Get platform for adaptive UI - treat browser as iOS for design consistency
-	// const isMobile = isPlatform('ios') || isPlatform('android') || isPlatform('desktop')
 
 	// Memoize options to prevent unnecessary reloads
 	const documentOptions = useMemo(() => ({
@@ -224,141 +200,129 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 
 	if (error) {
 		return (
-			<IonCard className={`pdf-viewer-error ${className}`}>
-				<IonCardContent>
-					<div className="error-content">
-						<IonText color="danger">
-							<h3>PDF Loading Error</h3>
-						</IonText>
-						<IonText color="medium">
-							<p>{error}</p>
-						</IonText>
-						<div className="error-suggestions">
-							<IonText>
-								<p><strong>Troubleshooting Steps:</strong></p>
-							</IonText>
-							<ul>
-								{error.includes('Invalid PDF') || error.includes('ArrayBuffer') ? (
-									<>
-										<li>Try uploading a different PDF file</li>
-										<li>Ensure the PDF file is not corrupted</li>
-										<li>Check if the file is a valid PDF document</li>
-										<li>Try saving the PDF from a different source</li>
-										<li>If the file is large, try a smaller PDF first</li>
-									</>
-								) : (
-									<>
-										<li>Try uploading a local PDF file instead</li>
-										<li>Check your internet connection</li>
-										<li>Ensure the PDF URL is accessible</li>
-										<li>Refresh the page and try again</li>
-									</>
-								)}
-							</ul>
-						</div>
-						<IonButton
-							expand="block"
-							fill="outline"
-							color="danger"
+			<div className={`pdf-viewer-error ${className}`}>
+				<div className="error-content">
+					<h3>PDF Loading Error</h3>
+					<div className="error-message">{error}</div>
+					<div className="error-suggestions">
+						<p><strong>Troubleshooting Steps:</strong></p>
+						<ul>
+							{error.includes('Invalid PDF') || error.includes('ArrayBuffer') ? (
+								<>
+									<li>Try uploading a different PDF file</li>
+									<li>Ensure the PDF file is not corrupted</li>
+									<li>Check if the file is a valid PDF document</li>
+									<li>Try saving the PDF from a different source</li>
+									<li>If the file is large, try a smaller PDF first</li>
+								</>
+							) : (
+								<>
+									<li>Try uploading a local PDF file instead</li>
+									<li>Check your internet connection</li>
+									<li>Ensure the PDF URL is accessible</li>
+									<li>Refresh the page and try again</li>
+								</>
+							)}
+						</ul>
+					</div>
+					<div className="error-actions">
+						<button
+							className="pdf-control-btn primary"
 							onClick={retryLoad}
 						>
-							<IonIcon icon={refreshOutline} slot="start" />
-							Retry Loading
-						</IonButton>
+							↻ Retry Loading
+						</button>
 					</div>
-				</IonCardContent>
-			</IonCard>
+				</div>
+			</div>
 		)
 	}
 
 	return (
 		<div className={`pdf-viewer-container ${className}`} style={{ width, height }}>
 			{/* Controls */}
-			<IonToolbar color="light">
-				<div className="pdf-controls-single-line">
-					{/* Navigation Controls */}
-					<IonButtons>
-						<IonButton
-							fill="clear"
-							disabled={pageNumber <= 1}
-							onClick={goToPrevPage}
-							size="small"
-						>
-							<IonIcon icon={chevronBack} />
-						</IonButton>
+			<div className="pdf-controls-single-line">
+				{/* Navigation Controls */}
+				<div className="pdf-controls-group">
+					<button
+						className="pdf-control-btn"
+						disabled={pageNumber <= 1}
+						onClick={goToPrevPage}
+						title="Previous page"
+					>
+						‹
+					</button>
 
-						<IonText className="page-info-compact">
-							{numPages > 0 ? `${pageNumber} / ${numPages}` : 'Loading...'}
-						</IonText>
+					<span className="page-info-compact">
+						{numPages > 0 ? `${pageNumber} / ${numPages}` : 'Loading...'}
+					</span>
 
-						<IonButton
-							fill="clear"
-							disabled={pageNumber >= numPages}
-							onClick={goToNextPage}
-							size="small"
-						>
-							<IonIcon icon={chevronForward} />
-						</IonButton>
-					</IonButtons>
-
-					{/* Page Input */}
-					<div className="page-input-compact">
-						<IonInput
-							type="number"
-							min={1}
-							max={numPages || 1}
-							value={pageNumber}
-							onIonInput={(e) => goToPage(parseInt(e.detail.value!) || 1)}
-							disabled={!numPages}
-							placeholder="Page"
-							className="page-number-input"
-						/>
-					</div>
-
-					{/* Zoom Controls */}
-					<IonButtons>
-						<IonButton
-							fill="clear"
-							disabled={scale <= 0.5}
-							onClick={zoomOut}
-							size="small"
-						>
-							<IonIcon icon={removeOutline} />
-						</IonButton>
-
-						<IonText className="zoom-info-compact">
-							{Math.round(scale * 100)}%
-						</IonText>
-
-						<IonButton
-							fill="clear"
-							disabled={scale >= 3.0}
-							onClick={zoomIn}
-							size="small"
-						>
-							<IonIcon icon={addOutline} />
-						</IonButton>
-
-						<IonButton
-							fill="clear"
-							onClick={resetZoom}
-							size="small"
-						>
-							<IonIcon icon={homeOutline} />
-						</IonButton>
-
-						{/* Scroll Mode Toggle */}
-						<IonButton
-							fill="clear"
-							onClick={toggleScrollMode}
-							size="small"
-							title={currentScrollMode === 'page' ? 'Switch to continuous scroll' : 'Switch to page-by-page'}
-						>
-							<IonIcon icon={currentScrollMode === 'page' ? listOutline : readerOutline} />
-						</IonButton>
-					</IonButtons>
+					<button
+						className="pdf-control-btn"
+						disabled={pageNumber >= numPages}
+						onClick={goToNextPage}
+						title="Next page"
+					>
+						›
+					</button>
 				</div>
-			</IonToolbar>
+
+				{/* Page Input */}
+				<div className="page-input-compact">
+					<input
+						type="number"
+						min={1}
+						max={numPages || 1}
+						value={pageNumber}
+						onChange={(e) => goToPage(parseInt(e.target.value) || 1)}
+						disabled={!numPages}
+						placeholder="Page"
+						className="page-number-input"
+					/>
+				</div>
+
+				{/* Zoom Controls */}
+				<div className="pdf-controls-group">
+					<button
+						className="pdf-control-btn"
+						disabled={scale <= 0.5}
+						onClick={zoomOut}
+						title="Zoom out"
+					>
+						−
+					</button>
+
+					<span className="zoom-info-compact">
+						{Math.round(scale * 100)}%
+					</span>
+
+					<button
+						className="pdf-control-btn"
+						disabled={scale >= 3.0}
+						onClick={zoomIn}
+						title="Zoom in"
+					>
+						+
+					</button>
+
+					<button
+						className="pdf-control-btn"
+						onClick={resetZoom}
+						title="Reset zoom"
+					>
+						⌂
+					</button>
+
+					{/* Scroll Mode Toggle */}
+					<button
+						className="pdf-control-btn"
+						onClick={toggleScrollMode}
+						title={currentScrollMode === 'page' ? 'Switch to continuous scroll' : 'Switch to page-by-page'}
+					>
+						{currentScrollMode === 'page' ? '⎘' : '≡'}
+					</button>
+				</div>
+			</div>
 
 			{/* PDF Content */}
 			<div
@@ -367,16 +331,14 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 			>
 				{loading && (
 					<div className="pdf-loading-ionic">
-						<IonProgressBar type="indeterminate" />
-						<IonText color="medium">
-							<p>Loading PDF...</p>
-							<p className="loading-details">
-								{typeof file === 'string' ?
-									(file.startsWith('/') ? 'Loading local file...' : 'Loading from URL...') :
-									'Processing uploaded file...'
-								}
-							</p>
-						</IonText>
+						<div className="loading-spinner"></div>
+						<p>Loading PDF...</p>
+						<p className="loading-details">
+							{typeof file === 'string' ?
+								(file.startsWith('/') ? 'Loading local file...' : 'Loading from URL...') :
+								'Processing uploaded file...'
+							}
+						</p>
 					</div>
 				)}
 

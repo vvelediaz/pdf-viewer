@@ -1,80 +1,20 @@
 import React, { useState } from 'react'
-import {
-	IonApp,
-	IonContent,
-	IonHeader,
-	IonPage,
-	IonTitle,
-	IonToolbar,
-	IonItem,
-	IonLabel,
-	IonSelect,
-	IonSelectOption,
-	IonButton,
-	IonInput,
-	IonGrid,
-	IonRow,
-	IonCol,
-	IonChip,
-	IonIcon,
-	IonToast,
-	IonAccordion,
-	IonAccordionGroup,
-	IonList,
-	IonMenu,
-	IonMenuButton,
-	IonButtons,
-	IonSplitPane,
-	IonFooter,
-	IonCard,
-	IonCardContent,
-	IonCardHeader,
-	IonCardTitle,
-	IonText,
-	IonBadge
-} from '@ionic/react'
-import {
-	documentOutline,
-	cloudUploadOutline,
-	folderOutline,
-	documentTextOutline,
-	peopleOutline,
-	settingsOutline,
-	statsChartOutline,
-	timeOutline,
-	downloadOutline,
-	shareOutline,
-	starOutline
-} from 'ionicons/icons'
 import PDFViewer from './components/PDFViewer'
 import ErrorBoundary from './components/ErrorBoundary'
+import './App.css'
 
 const App: React.FC = () => {
-	// Sample PDF documents for a document management system
-	const documentCategories = {
-		contracts: [
-			{ name: 'Service Agreement 2024', url: '/sample.pdf', size: '1.2 MB', date: '2024-01-15' },
-			{ name: 'NDA Template', url: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf', size: '845 KB', date: '2024-01-10' }
-		],
-		reports: [
-			{ name: 'Quarterly Report Q1', url: '/sample.pdf', size: '2.1 MB', date: '2024-03-31' },
-			{ name: 'Financial Analysis', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', size: '1.8 MB', date: '2024-03-15' }
-		],
-		manuals: [
-			{ name: 'User Manual v2.1', url: '/sample.pdf', size: '3.2 MB', date: '2024-02-20' },
-			{ name: 'Installation Guide', url: '/sample.pdf', size: '1.5 MB', date: '2024-02-15' }
-		],
-		policies: [
-			{ name: 'Data Privacy Policy', url: '/sample.pdf', size: '890 KB', date: '2024-01-20' },
-			{ name: 'Security Guidelines', url: '/sample.pdf', size: '1.1 MB', date: '2024-01-18' }
-		]
-	}
+	// Sample PDF documents for demonstration
+	const sampleDocuments = [
+		{ name: 'Local Sample PDF', url: '/sample.pdf', size: '1.2 MB', date: '2024-01-15' },
+		{ name: 'Mozilla PDF.js Example', url: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf', size: '845 KB', date: '2024-01-10' },
+		{ name: 'W3C Test Document', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', size: '13 KB', date: '2024-03-15' }
+	]
 
-	const [selectedPDF, setSelectedPDF] = useState<string | File>(documentCategories.contracts[0].url)
-	const [selectedDocument, setSelectedDocument] = useState(documentCategories.contracts[0])
+	const [selectedPDF, setSelectedPDF] = useState<string | File>(sampleDocuments[0].url)
+	const [selectedDocument, setSelectedDocument] = useState(sampleDocuments[0])
 	const [currentPage, setCurrentPage] = useState(1)
 	const [currentZoom, setCurrentZoom] = useState(1.0)
-	const [fileInputKey, setFileInputKey] = useState(0)
 	const [showToast, setShowToast] = useState(false)
 	const [toastMessage, setToastMessage] = useState('')
 
@@ -91,14 +31,18 @@ const App: React.FC = () => {
 	const handleLoadSuccess = (pdf: any) => {
 		console.log(`PDF loaded successfully with ${pdf.numPages} pages`)
 		setCurrentPage(1)
-		setToastMessage(`Document loaded successfully (${pdf.numPages} pages)`)
-		setShowToast(true)
+		showMessage(`Document loaded successfully (${pdf.numPages} pages)`)
 	}
 
 	const handleLoadError = (error: Error) => {
 		console.error('PDF load error:', error)
-		setToastMessage('Failed to load document')
+		showMessage('Failed to load document')
+	}
+
+	const showMessage = (message: string) => {
+		setToastMessage(message)
 		setShowToast(true)
+		setTimeout(() => setShowToast(false), 3000)
 	}
 
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,347 +57,97 @@ const App: React.FC = () => {
 				date: new Date().toISOString().split('T')[0]
 			})
 			setCurrentPage(1)
-			setToastMessage(`File "${file.name}" uploaded`)
-			setShowToast(true)
+			showMessage(`File "${file.name}" uploaded`)
 		} else {
-			setToastMessage('Please select a valid PDF file')
-			setShowToast(true)
+			showMessage('Please select a valid PDF file')
 		}
 	}
 
-	const selectDocument = (doc: any) => {
+	const selectDocument = (doc: typeof sampleDocuments[0]) => {
 		setSelectedPDF(doc.url)
 		setSelectedDocument(doc)
 		setCurrentPage(1)
-		setToastMessage(`Loading: ${doc.name}`)
-		setShowToast(true)
+		showMessage(`Loading: ${doc.name}`)
 	}
-
-	const triggerFileInput = () => {
-		const input = document.getElementById('pdf-upload') as HTMLInputElement
-		input?.click()
-	}
-
-	const menuContent = (
-		<IonContent>
-			<IonList>
-				<IonItem lines="full">
-					<IonIcon icon={cloudUploadOutline} slot="start" color="primary" />
-					<IonLabel>
-						<IonButton fill="clear" onClick={triggerFileInput} expand="block">
-							Upload New Document
-						</IonButton>
-					</IonLabel>
-					<input
-						key={fileInputKey}
-						id="pdf-upload"
-						type="file"
-						accept=".pdf,application/pdf"
-						onChange={handleFileUpload}
-						style={{ display: 'none' }}
-					/>
-				</IonItem>
-			</IonList>
-
-			<IonAccordionGroup>
-				<IonAccordion value="contracts">
-					<IonItem slot="header" color="light">
-						<IonIcon icon={documentTextOutline} slot="start" />
-						<IonLabel>Contracts</IonLabel>
-						<IonBadge color="primary">{documentCategories.contracts.length}</IonBadge>
-					</IonItem>
-					<div className="ion-padding" slot="content">
-						{documentCategories.contracts.map((doc, index) => (
-							<IonItem
-								key={index}
-								button
-								onClick={() => selectDocument(doc)}
-								className={selectedDocument.name === doc.name ? 'selected-document' : ''}
-							>
-								<IonIcon icon={documentOutline} slot="start" size="small" />
-								<IonLabel>
-									<h3>{doc.name}</h3>
-									<p>{doc.size} • {doc.date}</p>
-								</IonLabel>
-							</IonItem>
-						))}
-					</div>
-				</IonAccordion>
-
-				<IonAccordion value="reports">
-					<IonItem slot="header" color="light">
-						<IonIcon icon={statsChartOutline} slot="start" />
-						<IonLabel>Reports</IonLabel>
-						<IonBadge color="secondary">{documentCategories.reports.length}</IonBadge>
-					</IonItem>
-					<div className="ion-padding" slot="content">
-						{documentCategories.reports.map((doc, index) => (
-							<IonItem
-								key={index}
-								button
-								onClick={() => selectDocument(doc)}
-								className={selectedDocument.name === doc.name ? 'selected-document' : ''}
-							>
-								<IonIcon icon={documentOutline} slot="start" size="small" />
-								<IonLabel>
-									<h3>{doc.name}</h3>
-									<p>{doc.size} • {doc.date}</p>
-								</IonLabel>
-							</IonItem>
-						))}
-					</div>
-				</IonAccordion>
-
-				<IonAccordion value="manuals">
-					<IonItem slot="header" color="light">
-						<IonIcon icon={folderOutline} slot="start" />
-						<IonLabel>Manuals</IonLabel>
-						<IonBadge color="tertiary">{documentCategories.manuals.length}</IonBadge>
-					</IonItem>
-					<div className="ion-padding" slot="content">
-						{documentCategories.manuals.map((doc, index) => (
-							<IonItem
-								key={index}
-								button
-								onClick={() => selectDocument(doc)}
-								className={selectedDocument.name === doc.name ? 'selected-document' : ''}
-							>
-								<IonIcon icon={documentOutline} slot="start" size="small" />
-								<IonLabel>
-									<h3>{doc.name}</h3>
-									<p>{doc.size} • {doc.date}</p>
-								</IonLabel>
-							</IonItem>
-						))}
-					</div>
-				</IonAccordion>
-
-				<IonAccordion value="policies">
-					<IonItem slot="header" color="light">
-						<IonIcon icon={settingsOutline} slot="start" />
-						<IonLabel>Policies</IonLabel>
-						<IonBadge color="warning">{documentCategories.policies.length}</IonBadge>
-					</IonItem>
-					<div className="ion-padding" slot="content">
-						{documentCategories.policies.map((doc, index) => (
-							<IonItem
-								key={index}
-								button
-								onClick={() => selectDocument(doc)}
-								className={selectedDocument.name === doc.name ? 'selected-document' : ''}
-							>
-								<IonIcon icon={documentOutline} slot="start" size="small" />
-								<IonLabel>
-									<h3>{doc.name}</h3>
-									<p>{doc.size} • {doc.date}</p>
-								</IonLabel>
-							</IonItem>
-						))}
-					</div>
-				</IonAccordion>
-			</IonAccordionGroup>
-
-			<IonList>
-				<IonItem button>
-					<IonIcon icon={peopleOutline} slot="start" />
-					<IonLabel>Shared Documents</IonLabel>
-				</IonItem>
-				<IonItem button>
-					<IonIcon icon={starOutline} slot="start" />
-					<IonLabel>Favorites</IonLabel>
-				</IonItem>
-				<IonItem button>
-					<IonIcon icon={timeOutline} slot="start" />
-					<IonLabel>Recent</IonLabel>
-				</IonItem>
-			</IonList>
-		</IonContent>
-	)
 
 	return (
-		<IonApp>
-			<IonSplitPane contentId="main" when="lg">
-				<IonMenu contentId="main" type="overlay">
-					<IonHeader>
-						<IonToolbar color="light">
-							<IonTitle>Document Library</IonTitle>
-						</IonToolbar>
-					</IonHeader>
-					{menuContent}
-				</IonMenu>
+		<div className="app">
+			<header className="app-header">
+				<h1>📄 React PDF Viewer</h1>
+				<p>A lightweight, modern PDF viewer component</p>
+			</header>
 
-				<IonPage id="main">
-					<IonHeader>
-						<IonToolbar>
-							<IonButtons slot="start">
-								<IonMenuButton />
-							</IonButtons>
-							<IonTitle>DocuFlow - Document Management System</IonTitle>
-							<IonButtons slot="end">
-								<IonButton fill="clear">
-									<IonIcon icon={shareOutline} />
-								</IonButton>
-								<IonButton fill="clear">
-									<IonIcon icon={downloadOutline} />
-								</IonButton>
-							</IonButtons>
-						</IonToolbar>
-					</IonHeader>
+			<main className="app-main">
+				{/* Sidebar */}
+				<aside className="sidebar">
+					<div className="upload-section">
+						<h3>📁 Upload Document</h3>
+						<input
+							type="file"
+							accept=".pdf,application/pdf"
+							onChange={handleFileUpload}
+							className="file-input"
+							id="pdf-upload"
+						/>
+						<label htmlFor="pdf-upload" className="upload-btn">
+							📤 Choose PDF File
+						</label>
+					</div>
 
-					<IonContent fullscreen>
-						<IonGrid>
-							<IonRow>
-								{/* Document info section */}
-								<IonCol size="12">
-									<IonCard>
-										<IonCardHeader>
-											<IonCardTitle>{selectedDocument.name}</IonCardTitle>
-										</IonCardHeader>
-										<IonCardContent>
-											<div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
-												<IonChip color="primary">
-													<IonIcon icon={documentOutline} />
-													<IonLabel>Page: {currentPage}</IonLabel>
-												</IonChip>
-												<IonChip color="secondary">
-													<IonLabel>Zoom: {Math.round(currentZoom * 100)}%</IonLabel>
-												</IonChip>
-												<IonChip color="tertiary">
-													<IonLabel>Size: {selectedDocument.size}</IonLabel>
-												</IonChip>
-												<IonChip color="medium">
-													<IonIcon icon={timeOutline} />
-													<IonLabel>Modified: {selectedDocument.date}</IonLabel>
-												</IonChip>
-											</div>
-										</IonCardContent>
-									</IonCard>
-								</IonCol>
-
-								{/* PDF Viewer Section */}
-								<IonCol size="12" sizeLg="8">
-									<div style={{ height: '70vh', minHeight: '500px' }}>
-										<ErrorBoundary>
-											<PDFViewer
-												key={typeof selectedPDF === 'string' ? selectedPDF : selectedPDF.name + selectedPDF.size}
-												file={selectedPDF}
-												width="100%"
-												height="100%"
-												onPageChange={handlePageChange}
-												onZoomChange={handleZoomChange}
-												onLoadSuccess={handleLoadSuccess}
-												onLoadError={handleLoadError}
-												initialPage={1}
-												initialZoom={1.0}
-												scrollMode="page"
-											/>
-										</ErrorBoundary>
+					<div className="documents-section">
+						<h3>📚 Sample Documents</h3>
+						<div className="document-list">
+							{sampleDocuments.map((doc, index) => (
+								<div
+									key={index}
+									className={`document-item ${selectedDocument.name === doc.name ? 'selected' : ''}`}
+									onClick={() => selectDocument(doc)}
+								>
+									<div className="document-icon">📄</div>
+									<div className="document-info">
+										<h4>{doc.name}</h4>
+										<p>{doc.size} • {doc.date}</p>
 									</div>
-								</IonCol>
+								</div>
+							))}
+						</div>
+					</div>
 
-								{/* Right sidebar for larger screens */}
-								<IonCol size="12" sizeLg="4" className="ion-hide-lg-down">
-									<IonCard>
-										<IonCardHeader>
-											<IonCardTitle>Quick Actions</IonCardTitle>
-										</IonCardHeader>
-										<IonCardContent>
-											<IonList>
-												<IonItem button>
-													<IonIcon icon={downloadOutline} slot="start" />
-													<IonLabel>Download PDF</IonLabel>
-												</IonItem>
-												<IonItem button>
-													<IonIcon icon={shareOutline} slot="start" />
-													<IonLabel>Share Document</IonLabel>
-												</IonItem>
-												<IonItem button>
-													<IonIcon icon={starOutline} slot="start" />
-													<IonLabel>Add to Favorites</IonLabel>
-												</IonItem>
-											</IonList>
-										</IonCardContent>
-									</IonCard>
+					<div className="info-section">
+						<h3>📊 Current Document</h3>
+						<div className="current-doc-info">
+							<p><strong>Name:</strong> {selectedDocument.name}</p>
+							<p><strong>Size:</strong> {selectedDocument.size}</p>
+							<p><strong>Page:</strong> {currentPage}</p>
+							<p><strong>Zoom:</strong> {Math.round(currentZoom * 100)}%</p>
+						</div>
+					</div>
+				</aside>
 
-									<IonCard>
-										<IonCardHeader>
-											<IonCardTitle>Document Info</IonCardTitle>
-										</IonCardHeader>
-										<IonCardContent>
-											<IonItem lines="none">
-												<IonLabel>
-													<h3>Created</h3>
-													<p>{selectedDocument.date}</p>
-												</IonLabel>
-											</IonItem>
-											<IonItem lines="none">
-												<IonLabel>
-													<h3>File Size</h3>
-													<p>{selectedDocument.size}</p>
-												</IonLabel>
-											</IonItem>
-											<IonItem lines="none">
-												<IonLabel>
-													<h3>Owner</h3>
-													<p>John Smith</p>
-												</IonLabel>
-											</IonItem>
-											<IonItem lines="none">
-												<IonLabel>
-													<h3>Department</h3>
-													<p>Legal & Compliance</p>
-												</IonLabel>
-											</IonItem>
-										</IonCardContent>
-									</IonCard>
-								</IonCol>
-							</IonRow>
-						</IonGrid>
-					</IonContent>
+				{/* PDF Viewer */}
+				<div className="viewer-container">
+					<ErrorBoundary>
+						<PDFViewer
+							file={selectedPDF}
+							width="100%"
+							height="calc(100vh - 120px)"
+							onLoadSuccess={handleLoadSuccess}
+							onLoadError={handleLoadError}
+							onPageChange={handlePageChange}
+							onZoomChange={handleZoomChange}
+							className="pdf-viewer"
+						/>
+					</ErrorBoundary>
+				</div>
+			</main>
 
-					{/* Footer with company info */}
-					<IonFooter>
-						<IonToolbar>
-							<IonGrid>
-								<IonRow>
-									<IonCol size="12" sizeMd="4">
-										<IonText>
-											<h6>DocuFlow Enterprise</h6>
-											<p>© 2024 TechCorp Solutions. All rights reserved.</p>
-										</IonText>
-									</IonCol>
-									<IonCol size="12" sizeMd="4">
-										<IonText>
-											<p>
-												<strong>Support:</strong> support@techcorp.com<br />
-												<strong>Phone:</strong> +1 (555) 123-4567
-											</p>
-										</IonText>
-									</IonCol>
-									<IonCol size="12" sizeMd="4">
-										<IonText>
-											<p>
-												<a href="#privacy">Privacy Policy</a> |
-												<a href="#terms"> Terms of Service</a> |
-												<a href="#help"> Help Center</a>
-											</p>
-										</IonText>
-									</IonCol>
-								</IonRow>
-							</IonGrid>
-						</IonToolbar>
-					</IonFooter>
-
-					<IonToast
-						isOpen={showToast}
-						onDidDismiss={() => setShowToast(false)}
-						message={toastMessage}
-						duration={3000}
-						position="bottom"
-					/>
-				</IonPage>
-			</IonSplitPane>
-		</IonApp>
+			{/* Toast notification */}
+			{showToast && (
+				<div className="toast">
+					{toastMessage}
+				</div>
+			)}
+		</div>
 	)
 }
 

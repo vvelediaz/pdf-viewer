@@ -1,7 +1,7 @@
 /**
- * @module ionic-pdf-viewer
+ * @module react-pdf-viewer
  * 
- * A modern React PDF viewer component built with Ionic Framework.
+ * A modern, lightweight React PDF viewer component.
  * Features include zoom controls, page navigation, responsive design,
  * and support for both page and continuous scroll modes.
  */

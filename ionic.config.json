@@ -1,8 +1,0 @@
-{
-	"name": "pdf-viewer",
-	"integrations": {
-		"capacitor": {}
-	},
-	"type": "react",
-	"id": "pdf-viewer-ionic"
-}
