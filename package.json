@@ -47,7 +47,7 @@
 		"predev": "bun run copy-worker",
 		"dev": "vite",
 		"build": "tsc",
-		"build:lib": "vite build --config vite.config.lib.ts",
+		"build:lib": "tsc",
 		"preview": "vite preview",
 		"type-check": "tsc --noEmit",
 		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
