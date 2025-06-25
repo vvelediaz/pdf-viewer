@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import { PDFViewer } from '@vvelediaz/react-pdf-viewer'
+import { PDFViewer, setupPDFJS } from '@vvelediaz/react-pdf-viewer'
 import type { PDFDocumentProxy } from '@vvelediaz/react-pdf-viewer/types'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 // Note: Copy PDFViewer.css from the GitHub repo to your project
+
+// Configure PDF.js worker
+setupPDFJS()
 
 /**
  * Advanced usage example with file upload, error handling, and controls

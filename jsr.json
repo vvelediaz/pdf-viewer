@@ -1,6 +1,6 @@
 {
 	"name": "@vvelediaz/react-pdf-viewer",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"exports": {
 		".": "./mod.ts",
 		"./types": "./src/types/pdf.ts"

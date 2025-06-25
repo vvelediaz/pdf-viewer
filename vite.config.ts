@@ -6,4 +6,13 @@ export default defineConfig({
 	server: {
 		port: 3000,
 	},
+	build: {
+		rollupOptions: {
+			external: ['react', 'react-dom'],
+		},
+	},
+	optimizeDeps: {
+		include: ['react-pdf', 'pdfjs-dist'],
+	},
+	assetsInclude: ['**/*.worker.js', '**/*.worker.mjs'],
 }) 

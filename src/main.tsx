@@ -1,6 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import { setupPDFJS } from './components/index'
+
+// Initialize PDF.js worker
+setupPDFJS()
 
 // Custom CSS
 import './index.css'

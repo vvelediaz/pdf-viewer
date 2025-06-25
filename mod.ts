@@ -6,8 +6,10 @@
  * and support for both page and continuous scroll modes.
  */
 
-// Main component export
+// Main component exports
 export { default as PDFViewer } from './src/components/PDFViewer'
+export { PDFViewer as PDFViewerComponent } from './src/components/PDFViewer'
+export { setupPDFJS } from './src/components/index'
 
 // Type exports
 export type {

@@ -50,7 +50,8 @@
 
 .upload-section h3,
 .documents-section h3,
-.info-section h3 {
+.info-section h3,
+.debug-section h3 {
 	margin: 0 0 12px 0;
 	color: #2c3e50;
 	font-size: 1.1rem;
@@ -134,21 +135,49 @@
 }
 
 /* Current document info */
-.current-doc-info {
+.current-doc-info,
+.debug-info {
 	background: rgba(255, 255, 255, 0.5);
 	border-radius: 8px;
 	padding: 16px;
 	border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.current-doc-info p {
+.current-doc-info p,
+.debug-info p {
 	margin: 8px 0;
 	font-size: 0.9rem;
 	line-height: 1.4;
 }
 
-.current-doc-info strong {
+.current-doc-info strong,
+.debug-info strong {
 	color: #2c3e50;
+}
+
+/* Upload hint */
+.upload-hint {
+	margin-top: 8px;
+	font-size: 0.8rem;
+	color: #7f8c8d;
+	text-align: center;
+}
+
+/* Debug section */
+.debug-section {
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	padding-top: 16px;
+}
+
+.debug-info {
+	background: rgba(248, 249, 250, 0.8);
+	border-color: rgba(0, 0, 0, 0.05);
+}
+
+.debug-info p {
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+	font-size: 0.8rem;
+	word-break: break-all;
 }
 
 /* Viewer container */

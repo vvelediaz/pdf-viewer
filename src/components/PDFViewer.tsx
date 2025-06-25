@@ -2,8 +2,31 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { PDFViewerProps, PDFLoadSuccess } from '../types/pdf'
 
-// Set up the worker for react-pdf with CDN fallback
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
+// Configure PDF.js worker to use local file to avoid CORS issues
+const configurePDFWorker = () => {
+	try {
+		if (typeof pdfjs !== 'undefined' && pdfjs.GlobalWorkerOptions) {
+			// Use local worker file served from public directory
+			pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
+			console.log('PDF.js worker configured with local file:', pdfjs.GlobalWorkerOptions.workerSrc)
+		}
+	} catch (error) {
+		console.warn('Could not configure PDF.js worker:', error)
+
+		// Fallback: Try to set a CDN worker URL as last resort
+		try {
+			if (typeof pdfjs !== 'undefined' && pdfjs.GlobalWorkerOptions) {
+				pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
+				console.log('PDF.js worker configured with CDN fallback')
+			}
+		} catch (fallbackError) {
+			console.error('PDF.js worker configuration failed completely:', fallbackError)
+		}
+	}
+}
+
+// Initialize worker configuration
+configurePDFWorker()
 
 const PDFViewer: React.FC<PDFViewerProps> = ({
 	file,
@@ -27,36 +50,79 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 	const [currentVisiblePage, setCurrentVisiblePage] = useState<number>(1)
 	const [currentScrollMode, setCurrentScrollMode] = useState<'page' | 'continuous'>(scrollMode)
 
-	// Memoize options to prevent unnecessary reloads
-	const documentOptions = useMemo(() => ({
-		cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
-		cMapPacked: true,
-		standardFontDataUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
-	}), [])
+	// Enhanced options with local resources to avoid CORS issues
+	const documentOptions = useMemo(() => {
+		return {
+			// Use CDN for cmaps and fonts (these don't cause CORS issues typically)
+			cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
+			cMapPacked: true,
+			standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts/`,
+			// CORS and performance settings
+			httpHeaders: {},
+			withCredentials: false,
+			maxImageSize: 1024 * 1024 * 10, // 10MB
+			disableFontFace: false,
+			disableRange: false,
+			disableStream: false,
+		}
+	}, [])
 
-	// Handle file processing to avoid ArrayBuffer detachment
+	// Handle file processing with better error handling
 	useEffect(() => {
+		console.log('Processing file:', typeof file, file instanceof File ? file.name : file)
+
 		setLoading(true)
 		setError(null)
 		setNumPages(0)
 		setPageNumber(initialPage)
 
+		if (!file) {
+			setError('No file provided')
+			setLoading(false)
+			return
+		}
+
 		if (file instanceof File) {
+			// Validate file type
+			if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
+				setError('Invalid file type. Please select a PDF file.')
+				setLoading(false)
+				return
+			}
+
 			// Create a stable URL for the file to avoid ArrayBuffer issues
 			const url = URL.createObjectURL(file)
 			setFileUrl(url)
+			console.log('Created blob URL for file:', url)
 
 			// Cleanup the URL when component unmounts or file changes
 			return () => {
 				URL.revokeObjectURL(url)
+				console.log('Revoked blob URL:', url)
 			}
-		} else {
+		} else if (typeof file === 'string') {
+			// Handle URL strings
+			if (!file.startsWith('http') && !file.startsWith('/') && !file.startsWith('blob:')) {
+				setError('Invalid file URL format')
+				setLoading(false)
+				return
+			}
 			setFileUrl(file)
+			console.log('Using URL string:', file)
+		} else {
+			// Handle ArrayBuffer or other types
+			setFileUrl(file)
+			console.log('Using ArrayBuffer or other file type')
 		}
 	}, [file, initialPage])
 
 	const onDocumentLoadSuccess = useCallback(({ numPages }: PDFLoadSuccess) => {
-		console.log('PDF loaded successfully:', { numPages, file: typeof file === 'string' ? file : 'File object' })
+		console.log('PDF loaded successfully:', {
+			numPages,
+			file: typeof file === 'string' ? file : file instanceof File ? file.name : 'ArrayBuffer',
+			workerSrc: pdfjs.GlobalWorkerOptions.workerSrc
+		})
+
 		setNumPages(numPages)
 		setLoading(false)
 		setError(null)
@@ -67,18 +133,27 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 	}, [onLoadSuccess, file])
 
 	const onDocumentLoadError = useCallback((error: Error) => {
-		console.error('PDF load error details:', error)
+		console.error('PDF load error details:', {
+			message: error.message,
+			stack: error.stack,
+			file: typeof file === 'string' ? file : file instanceof File ? file.name : 'ArrayBuffer',
+			workerSrc: pdfjs.GlobalWorkerOptions.workerSrc
+		})
 
 		let errorMessage = 'Failed to load PDF'
 
 		if (error.message.includes('Invalid PDF structure') || error.message.includes('InvalidPDFException')) {
 			errorMessage = 'Invalid PDF file format or corrupted file.'
 		} else if (error.message.includes('fetch') || error.message.includes('NetworkError')) {
-			errorMessage = 'Failed to fetch PDF file from the server.'
+			errorMessage = 'Failed to fetch PDF file from the server. Check your internet connection and CORS settings.'
 		} else if (error.message.includes('password')) {
 			errorMessage = 'This PDF is password protected.'
 		} else if (error.message.includes('ArrayBuffer') || error.message.includes('detached')) {
 			errorMessage = 'Error processing PDF file. Please try uploading the file again.'
+		} else if (error.message.includes('worker')) {
+			errorMessage = 'PDF.js worker failed to load. Please check your internet connection.'
+		} else if (error.message.includes('CORS')) {
+			errorMessage = 'CORS error: Cannot load PDF from external source. Try downloading the file first.'
 		} else {
 			errorMessage = `Failed to load PDF: ${error.message}`
 		}
@@ -89,7 +164,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 		if (onLoadError) {
 			onLoadError(error)
 		}
-	}, [onLoadError])
+	}, [onLoadError, file])
 
 	const goToPrevPage = useCallback(() => {
 		const newPage = Math.max(pageNumber - 1, 1)
@@ -382,4 +457,5 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 	)
 }
 
-export default PDFViewer 
+export default PDFViewer
+export { PDFViewer } 

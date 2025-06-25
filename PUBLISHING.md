@@ -37,7 +37,16 @@ Replace `@vvelediaz` with your actual JSR scope name.
 }
 ```
 
-### 2. Build the Package
+### 2. Prepare Worker Files
+
+The package includes automatic PDF.js worker setup. Ensure the worker files are properly configured:
+
+```bash
+# Copy the correct worker file (automatic via predev script)
+bun run copy-worker
+```
+
+### 3. Build the Package
 
 ```bash
 # Build TypeScript and copy assets
@@ -47,12 +56,14 @@ bun run build:lib
 bun run type-check
 ```
 
-### 3. Test Locally
+### 4. Test Locally
 
 ```bash
-# Test the development version
+# Test the development version (auto-copies worker files)
 bun run dev
 ```
+
+**Important**: The `predev` script automatically copies the correct PDF.js worker file to avoid version mismatches and CORS issues.
 
 ## Publishing to JSR
 
@@ -109,6 +120,8 @@ git push origin v1.0.0
 - Update README.md with the correct package name
 - Add badge links for JSR/npm
 - Update installation instructions
+- Verify all examples work with the published version
+- Test zero-config setup and automatic worker management
 
 ## Version Management
 
@@ -139,6 +152,8 @@ jsr publish
 2. **Permission denied**: Ensure you're authenticated with JSR
 3. **Type errors**: Run `bun run type-check` to fix TypeScript issues
 4. **Missing files**: Check the `files` array in package.json
+5. **Worker file issues**: Ensure `copy-worker` script runs before build
+6. **CORS errors in examples**: Verify local worker files are included in build
 
 ### Getting Help
 
@@ -150,11 +165,15 @@ jsr publish
 - [ ] Updated scope name in jsr.json
 - [ ] Updated author info in package.json
 - [ ] Updated repository URLs
+- [ ] Worker files properly configured (`bun run copy-worker`)
 - [ ] Built the package successfully
 - [ ] Type checking passes
+- [ ] Zero-config setup tested locally
+- [ ] All examples work without manual configuration
 - [ ] Created JSR account and scope
 - [ ] Authenticated with JSR CLI
 - [ ] Published to JSR
 - [ ] Tagged the release
 - [ ] Created GitHub release
-- [ ] Updated documentation 
+- [ ] Updated documentation with latest features
+- [ ] Verified automatic PDF.js worker management works 
