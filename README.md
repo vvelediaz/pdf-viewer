@@ -117,8 +117,15 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react-pdf', 'pdfjs-dist'],
   },
+  // ⚠️ Don't externalize React in development
+  // Only externalize for library builds
 })
 ```
+
+**Common Vite Issues**:
+- ❌ **Don't externalize React** in your main vite.config.ts
+- ✅ **Do include react-pdf** in optimizeDeps
+- ✅ **Install peer dependencies** (React 18+)
 
 #### Next.js
 Add to your `next.config.js`:
@@ -181,6 +188,41 @@ module.exports = {
 - Use `scrollMode="page"` for very large documents
 - Implement lazy loading for multiple PDFs
 - Consider using lower `initialZoom` values
+
+#### React Import Errors ("useState is not a function")
+**Solutions**:
+1. **Check Vite Configuration**: Remove React externalization from dev config:
+   ```typescript
+   // vite.config.ts - Remove this section for development
+   build: {
+     rollupOptions: {
+       external: ['react', 'react-dom'], // ❌ Don't externalize in dev
+     },
+   }
+   ```
+
+2. **Install Peer Dependencies**: Ensure React is properly installed:
+   ```bash
+   npm install react@^18.0.0 react-dom@^18.0.0
+   # or
+   bun add react@^18.0.0 react-dom@^18.0.0
+   ```
+
+3. **Proper Vite Config**: Use this configuration:
+   ```typescript
+   export default defineConfig({
+     plugins: [react()],
+     optimizeDeps: {
+       include: ['react-pdf', 'pdfjs-dist'],
+     },
+   })
+   ```
+
+#### Module Externalization Warnings
+**Solutions**:
+- These warnings are normal in development and don't affect functionality
+- For production builds, externalization is handled automatically
+- Add to `optimizeDeps.include` in vite.config.ts if needed
 
 #### TypeScript Errors
 **Solutions**:
