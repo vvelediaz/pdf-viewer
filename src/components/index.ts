@@ -2,7 +2,7 @@ export { PDFViewer } from './PDFViewer'
 export type { PDFViewerProps, PDFDocumentProxy } from '../types/pdf'
 
 // PDF.js setup utility for better compatibility
-export const setupPDFJS = (): void => {
+export const setupPDFJS = () => {
 	try {
 		// Dynamic import to handle different bundler environments
 		import('react-pdf').then(({ pdfjs }) => {
