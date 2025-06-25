@@ -1,24 +1,22 @@
 {
 	"name": "@vvelediaz/react-pdf-viewer",
-	"version": "2.2.0",
+	"version": "2.0.0",
 	"description": "A modern, lightweight React PDF viewer component featuring zoom controls, page navigation, and responsive design",
 	"type": "module",
-	"main": "./dist/react-pdf-viewer.cjs.js",
-	"module": "./dist/react-pdf-viewer.es.js",
-	"types": "./dist/index.d.ts",
+	"main": "./mod.ts",
+	"module": "./mod.ts",
+	"types": "./mod.ts",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/react-pdf-viewer.es.js",
-			"require": "./dist/react-pdf-viewer.cjs.js"
+			"types": "./mod.ts",
+			"import": "./mod.ts"
 		},
-		"./types": "./dist/types/pdf.d.ts",
+		"./types": "./src/types/pdf.ts",
 		"./css": "./src/components/PDFViewer.css"
 	},
 	"files": [
-		"dist/",
-		"src/components/PDFViewer.css",
-		"public/pdf.worker.min.js",
+		"mod.ts",
+		"src/",
 		"README.md",
 		"LICENSE"
 	],
@@ -45,14 +43,9 @@
 		"url": "https://github.com/yourusername/react-pdf-viewer/issues"
 	},
 	"scripts": {
-		"copy-worker": "cp node_modules/react-pdf/node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js",
-		"copy-worker-to-dist": "cp public/pdf.worker.min.js dist/pdf.worker.min.js",
-		"postinstall": "echo 'To use @vvelediaz/react-pdf-viewer, copy the PDF worker file to your public directory:' && echo 'cp node_modules/@vvelediaz/react-pdf-viewer/public/pdf.worker.min.js public/' && echo 'Or call setupPDFJS() in your app to use CDN worker.'",
-		"predev": "bun run copy-worker",
 		"dev": "vite",
-		"build": "vite build",
-		"build:types": "tsc --emitDeclarationOnly --outDir dist",
-		"build:lib": "bun run build && bun run build:types && bun run copy-worker-to-dist && cp src/components/PDFViewer.css dist/ && cp dist/components/index.d.ts dist/index.d.ts && sed -i '' 's|\\.\\./types/pdf|./types/pdf|g; s|\\./PDFViewer|./components/PDFViewer|g' dist/index.d.ts",
+		"build": "tsc",
+		"build:lib": "tsc && cp src/components/PDFViewer.css dist/src/components/",
 		"preview": "vite preview",
 		"type-check": "tsc --noEmit",
 		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -60,19 +53,18 @@
 	},
 	"peerDependencies": {
 		"react": ">=18.0.0",
-		"react-dom": ">=18.0.0",
-		"react-pdf": ">=9.0.0"
+		"react-dom": ">=18.0.0"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"react-pdf": "^9.1.1"
+	},
 	"devDependencies": {
-		"@types/bun": "^1.2.17",
 		"@types/react": "^18.2.0",
 		"@types/react-dom": "^18.2.0",
 		"@vitejs/plugin-react": "^4.0.0",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-pdf": "^9.1.1",
 		"typescript": "^5.0.0",
-		"vite": "^4.3.0"
+		"vite": "^4.3.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
 	}
 }

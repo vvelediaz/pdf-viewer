@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import PDFViewer from './components/PDFViewer'
-import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
 
 const App: React.FC = () => {
-	// Sample PDF documents for demonstration - using more reliable sources
+	// Sample PDF documents for demonstration
 	const sampleDocuments = [
-		{ name: 'Local Sample PDF', url: '/sample.pdf', size: '606 B', date: '2024-01-15' },
-		{ name: 'Local Test PDF', url: '/test.pdf', size: '20 KB', date: '2024-01-16' },
-		{ name: 'Mozilla PDF.js Example', url: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf', size: '845 KB', date: '2024-01-10' }
+		{ name: 'Local Sample PDF', url: '/sample.pdf', size: '1.2 MB', date: '2024-01-15' },
+		{ name: 'Mozilla PDF.js Example', url: 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf', size: '845 KB', date: '2024-01-10' },
+		{ name: 'W3C Test Document', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', size: '13 KB', date: '2024-03-15' }
 	]
 
 	const [selectedPDF, setSelectedPDF] = useState<string | File>(sampleDocuments[0].url)
@@ -17,7 +16,6 @@ const App: React.FC = () => {
 	const [currentZoom, setCurrentZoom] = useState(1.0)
 	const [showToast, setShowToast] = useState(false)
 	const [toastMessage, setToastMessage] = useState('')
-	const [isLoading, setIsLoading] = useState(false)
 
 	const handlePageChange = (pageNumber: number) => {
 		setCurrentPage(pageNumber)
@@ -32,63 +30,42 @@ const App: React.FC = () => {
 	const handleLoadSuccess = (pdf: any) => {
 		console.log(`PDF loaded successfully with ${pdf.numPages} pages`)
 		setCurrentPage(1)
-		setIsLoading(false)
 		showMessage(`Document loaded successfully (${pdf.numPages} pages)`)
 	}
 
 	const handleLoadError = (error: Error) => {
 		console.error('PDF load error:', error)
-		setIsLoading(false)
-		showMessage(`Failed to load document: ${error.message}`)
+		showMessage('Failed to load document')
 	}
 
 	const showMessage = (message: string) => {
 		setToastMessage(message)
 		setShowToast(true)
-		setTimeout(() => setShowToast(false), 4000)
+		setTimeout(() => setShowToast(false), 3000)
 	}
 
 	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0]
-		if (file) {
-			// Validate file type more thoroughly
-			const isValidPDF = file.type === 'application/pdf' ||
-				file.name.toLowerCase().endsWith('.pdf') ||
-				file.type === 'application/x-pdf'
-
-			if (isValidPDF) {
-				console.log('Uploading file:', {
-					name: file.name,
-					size: file.size,
-					type: file.type,
-					lastModified: new Date(file.lastModified).toISOString()
-				})
-
-				setSelectedPDF(file)
-				setSelectedDocument({
-					name: file.name,
-					url: '',
-					size: `${Math.round(file.size / 1024)} KB`,
-					date: new Date().toISOString().split('T')[0]
-				})
-				setCurrentPage(1)
-				setIsLoading(true)
-				showMessage(`Loading file: ${file.name}`)
-			} else {
-				showMessage(`Invalid file type. Please select a PDF file. Selected: ${file.type}`)
-			}
+		if (file && file.type === 'application/pdf') {
+			console.log('Uploading file:', { name: file.name, size: file.size, type: file.type })
+			setSelectedPDF(file)
+			setSelectedDocument({
+				name: file.name,
+				url: '',
+				size: `${Math.round(file.size / 1024)} KB`,
+				date: new Date().toISOString().split('T')[0]
+			})
+			setCurrentPage(1)
+			showMessage(`File "${file.name}" uploaded`)
+		} else {
+			showMessage('Please select a valid PDF file')
 		}
-
-		// Reset the input so the same file can be selected again
-		event.target.value = ''
 	}
 
 	const selectDocument = (doc: typeof sampleDocuments[0]) => {
-		console.log('Selecting document:', doc)
 		setSelectedPDF(doc.url)
 		setSelectedDocument(doc)
 		setCurrentPage(1)
-		setIsLoading(true)
 		showMessage(`Loading: ${doc.name}`)
 	}
 
@@ -96,7 +73,7 @@ const App: React.FC = () => {
 		<div className="app">
 			<header className="app-header">
 				<h1>📄 React PDF Viewer</h1>
-				<p>A lightweight, modern PDF viewer component with Aqua design</p>
+				<p>A lightweight, modern PDF viewer component</p>
 			</header>
 
 			<main className="app-main">
@@ -106,7 +83,7 @@ const App: React.FC = () => {
 						<h3>📁 Upload Document</h3>
 						<input
 							type="file"
-							accept=".pdf,application/pdf,application/x-pdf"
+							accept=".pdf,application/pdf"
 							onChange={handleFileUpload}
 							className="file-input"
 							id="pdf-upload"
@@ -114,7 +91,6 @@ const App: React.FC = () => {
 						<label htmlFor="pdf-upload" className="upload-btn">
 							📤 Choose PDF File
 						</label>
-						<p className="upload-hint">Supports: PDF files up to 10MB</p>
 					</div>
 
 					<div className="documents-section">
@@ -143,35 +119,22 @@ const App: React.FC = () => {
 							<p><strong>Size:</strong> {selectedDocument.size}</p>
 							<p><strong>Page:</strong> {currentPage}</p>
 							<p><strong>Zoom:</strong> {Math.round(currentZoom * 100)}%</p>
-							<p><strong>Status:</strong> {isLoading ? 'Loading...' : 'Ready'}</p>
-						</div>
-					</div>
-
-					<div className="debug-section">
-						<h3>🔧 Debug Info</h3>
-						<div className="debug-info">
-							<p><strong>File Type:</strong> {typeof selectedPDF}</p>
-							<p><strong>URL:</strong> {typeof selectedPDF === 'string' ? selectedPDF.substring(0, 50) + '...' : 'File Object'}</p>
 						</div>
 					</div>
 				</aside>
 
 				{/* PDF Viewer */}
 				<div className="viewer-container">
-					<ErrorBoundary>
-						<PDFViewer
-							file={selectedPDF}
-							width="100%"
-							height="calc(100vh - 120px)"
-							onLoadSuccess={handleLoadSuccess}
-							onLoadError={handleLoadError}
-							onPageChange={handlePageChange}
-							onZoomChange={handleZoomChange}
-							className="pdf-viewer"
-							initialZoom={1.0}
-							scrollMode="page"
-						/>
-					</ErrorBoundary>
+					<PDFViewer
+						file={selectedPDF}
+						width="100%"
+						height="calc(100vh - 120px)"
+						onLoadSuccess={handleLoadSuccess}
+						onLoadError={handleLoadError}
+						onPageChange={handlePageChange}
+						onZoomChange={handleZoomChange}
+						className="pdf-viewer"
+					/>
 				</div>
 			</main>
 

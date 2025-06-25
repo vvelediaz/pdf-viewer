@@ -26,16 +26,14 @@
 		"forceConsistentCasingInFileNames": true
 	},
 	"include": [
-		"src/components/**/*",
-		"src/types/**/*"
+		"src",
+		"mod.ts"
 	],
 	"exclude": [
 		"node_modules",
 		"dist",
 		"src/main.tsx",
-		"src/App.tsx",
-		"src/App.css",
-		"src/index.css"
+		"src/App.tsx"
 	],
 	"references": [
 		{
