@@ -6,13 +6,29 @@ export default defineConfig({
 	server: {
 		port: 3000,
 	},
+	optimizeDeps: {
+		include: [
+			'react-pdf',
+			'react-pdf/dist/esm/entry.webpack',
+			'pdfjs-dist',
+			'pdfjs-dist/build/pdf.worker.entry'
+		],
+		exclude: ['@vvelediaz/react-pdf-viewer']
+	},
 	build: {
 		rollupOptions: {
-			external: ['react', 'react-dom'],
+			external: ['react', 'react-dom', 'react-pdf'],
+			output: {
+				globals: {
+					react: 'React',
+					'react-dom': 'ReactDOM',
+					'react-pdf': 'ReactPDF'
+				}
+			}
 		},
 	},
-	optimizeDeps: {
-		include: ['react-pdf', 'pdfjs-dist'],
+	ssr: {
+		noExternal: ['react-pdf']
 	},
 	assetsInclude: ['**/*.worker.js', '**/*.worker.mjs'],
 }) 
