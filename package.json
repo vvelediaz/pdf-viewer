@@ -1,6 +1,6 @@
 {
 	"name": "@vvelediaz/react-pdf-viewer",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "A modern, lightweight React PDF viewer component featuring zoom controls, page navigation, and responsive design",
 	"type": "module",
 	"main": "./dist/react-pdf-viewer.cjs.js",
@@ -18,6 +18,7 @@
 	"files": [
 		"dist/",
 		"src/components/PDFViewer.css",
+		"public/pdf.worker.min.js",
 		"README.md",
 		"LICENSE"
 	],
@@ -45,11 +46,13 @@
 	},
 	"scripts": {
 		"copy-worker": "cp node_modules/react-pdf/node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js",
+		"copy-worker-to-dist": "cp public/pdf.worker.min.js dist/pdf.worker.min.js",
+		"postinstall": "echo 'To use @vvelediaz/react-pdf-viewer, copy the PDF worker file to your public directory:' && echo 'cp node_modules/@vvelediaz/react-pdf-viewer/public/pdf.worker.min.js public/' && echo 'Or call setupPDFJS() in your app to use CDN worker.'",
 		"predev": "bun run copy-worker",
 		"dev": "vite",
 		"build": "vite build",
 		"build:types": "tsc --emitDeclarationOnly --outDir dist",
-		"build:lib": "bun run build && bun run build:types && cp src/components/PDFViewer.css dist/ && cp dist/components/index.d.ts dist/index.d.ts && sed -i '' 's|\\.\\./types/pdf|./types/pdf|g; s|\\./PDFViewer|./components/PDFViewer|g' dist/index.d.ts",
+		"build:lib": "bun run build && bun run build:types && bun run copy-worker-to-dist && cp src/components/PDFViewer.css dist/ && cp dist/components/index.d.ts dist/index.d.ts && sed -i '' 's|\\.\\./types/pdf|./types/pdf|g; s|\\./PDFViewer|./components/PDFViewer|g' dist/index.d.ts",
 		"preview": "vite preview",
 		"type-check": "tsc --noEmit",
 		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -62,6 +65,7 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
+		"@types/bun": "^1.2.17",
 		"@types/react": "^18.2.0",
 		"@types/react-dom": "^18.2.0",
 		"@vitejs/plugin-react": "^4.0.0",

@@ -2,18 +2,32 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { PDFViewerProps, PDFLoadSuccess } from '../types/pdf'
 
-// Configure PDF.js worker to use local file to avoid CORS issues
+// Configure PDF.js worker with multiple fallback strategies
 const configurePDFWorker = () => {
 	try {
 		if (typeof pdfjs !== 'undefined' && pdfjs.GlobalWorkerOptions) {
-			// Use local worker file served from public directory
-			pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
+			// Strategy 1: Try to use a worker file from the consuming app's public directory
+			const publicWorkerPath = '/pdf.worker.min.js'
+
+			// Strategy 2: Use CDN as fallback
+			const cdnWorkerPath = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
+
+
+
+			// First try the public directory (most reliable for consuming apps)
+			pdfjs.GlobalWorkerOptions.workerSrc = publicWorkerPath
 			console.log('PDF.js worker configured with local file:', pdfjs.GlobalWorkerOptions.workerSrc)
+
+			// Test if the worker file is accessible, if not fall back to CDN
+			fetch(publicWorkerPath, { method: 'HEAD' }).catch(() => {
+				console.warn('Local worker file not found, falling back to CDN')
+				pdfjs.GlobalWorkerOptions.workerSrc = cdnWorkerPath
+			})
 		}
 	} catch (error) {
 		console.warn('Could not configure PDF.js worker:', error)
 
-		// Fallback: Try to set a CDN worker URL as last resort
+		// Final fallback: Try to set a CDN worker URL
 		try {
 			if (typeof pdfjs !== 'undefined' && pdfjs.GlobalWorkerOptions) {
 				pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`

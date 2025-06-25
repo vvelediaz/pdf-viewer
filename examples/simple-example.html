@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple PDF Viewer Example - Production Build</title>
+
+	<!-- React UMD builds -->
+	<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+	<!-- PDF.js CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/react-pdf@9.1.1/dist/Page/AnnotationLayer.css">
+	<link rel="stylesheet" href="https://unpkg.com/react-pdf@9.1.1/dist/Page/TextLayer.css">
+
+	<!-- Component CSS -->
+	<link rel="stylesheet" href="/dist/PDFViewer.css">
+
+	<style>
+		body {
+			margin: 0;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			padding: 20px;
+		}
+
+		.status {
+			background: #f0f8ff;
+			border: 1px solid #007AFF;
+			border-radius: 6px;
+			padding: 16px;
+			margin: 20px 0;
+		}
+
+		.viewer-container {
+			border: 1px solid #ccc;
+			border-radius: 8px;
+			overflow: hidden;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			margin: 20px 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="root"></div>
+
+	<script type="module">
+		// Import the production build as ES module
+		const { PDFViewer, setupPDFJS } = await import('/dist/react-pdf-viewer.es.js')
+
+		// Setup PDF.js worker
+		setupPDFJS()
+
+		// Use React from global scope (UMD)
+		const { createElement: h, useState } = React
+		const { createRoot } = ReactDOM
+
+		function SimpleExample() {
+			const [status, setStatus] = useState('Ready to load PDF')
+
+			const handleLoadSuccess = (pdf) => {
+				setStatus(`✅ PDF loaded successfully with ${pdf.numPages} pages`)
+				console.log('PDF loaded successfully:', pdf.numPages, 'pages')
+			}
+
+			const handleLoadError = (error) => {
+				setStatus(`❌ Error: ${error.message}`)
+				console.error('Failed to load PDF:', error.message)
+			}
+
+			const handlePageChange = (pageNumber) => {
+				console.log('Current page:', pageNumber)
+			}
+
+			return h('div', null, [
+				h('h1', { key: 'title' }, 'Simple PDF Viewer Example'),
+
+				h('div', { key: 'status', className: 'status' }, [
+					h('strong', { key: 'label' }, 'Status: '),
+					status
+				]),
+
+				h('p', {
+					key: 'desc',
+					style: { color: '#666', marginBottom: '20px' }
+				}, '✅ Using production build from /dist/ directory with UMD React'),
+
+				h('div', {
+					key: 'viewer',
+					className: 'viewer-container'
+				}, [
+					h(PDFViewer, {
+						key: 'pdf',
+						file: '/sample.pdf',
+						width: '100%',
+						height: '600px',
+						onLoadSuccess: handleLoadSuccess,
+						onLoadError: handleLoadError,
+						onPageChange: handlePageChange,
+						initialZoom: 1.0,
+						scrollMode: 'page'
+					})
+				]),
+
+				h('div', {
+					key: 'instructions',
+					style: {
+						marginTop: '20px',
+						padding: '20px',
+						backgroundColor: '#f8f9fa',
+						borderRadius: '8px',
+						fontSize: '14px'
+					}
+				}, [
+					h('h3', { key: 'title' }, 'This Example Demonstrates:'),
+					h('ul', { key: 'list' }, [
+						h('li', { key: '1' }, '✅ Production build integration (/dist/react-pdf-viewer.es.js)'),
+						h('li', { key: '2' }, '✅ UMD React compatibility (no module resolution issues)'),
+						h('li', { key: '3' }, '✅ Automatic PDF.js worker setup with setupPDFJS()'),
+						h('li', { key: '4' }, '✅ Proper CSS loading and Aqua interface styling'),
+						h('li', { key: '5' }, '✅ Error handling and status reporting'),
+						h('li', { key: '6' }, '✅ Cross-browser compatibility')
+					])
+				])
+			])
+		}
+
+		const root = createRoot(document.getElementById('root'))
+		root.render(h(SimpleExample))
+	</script>
+</body>
+
+</html>

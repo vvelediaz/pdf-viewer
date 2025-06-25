@@ -2,7 +2,7 @@
 
 A modern, feature-rich React PDF viewer component with a classic Mac OS X Aqua interface. Perfect for desktop and web applications requiring elegant PDF display capabilities with zero configuration hassles.
 
-[![JSR](https://jsr.io/badges/@vvelediaz/react-pdf-viewer)](https://jsr.io/@vvelediaz/react-pdf-viewer)
+[![npm](https://img.shields.io/npm/v/@vvelediaz/react-pdf-viewer)](https://www.npmjs.com/package/@vvelediaz/react-pdf-viewer)
 
 ## ✨ Features
 
@@ -22,29 +22,44 @@ A modern, feature-rich React PDF viewer component with a classic Mac OS X Aqua i
 
 ## 📦 Installation
 
-### Using JSR (Recommended)
-
 ```bash
-# Deno
-deno add @vvelediaz/react-pdf-viewer
-
 # npm
-npx jsr add @vvelediaz/react-pdf-viewer
+npm install @vvelediaz/react-pdf-viewer
 
 # Yarn
-yarn dlx jsr add @vvelediaz/react-pdf-viewer
+yarn add @vvelediaz/react-pdf-viewer
 
 # pnpm
-pnpm dlx jsr add @vvelediaz/react-pdf-viewer
+pnpm add @vvelediaz/react-pdf-viewer
 
 # Bun
-bunx jsr add @vvelediaz/react-pdf-viewer
+bun add @vvelediaz/react-pdf-viewer
 ```
 
-### Using npm
+## ⚡ Quick Setup
 
+After installation, you need to set up the PDF.js worker file. Choose one of these methods:
+
+### Method 1: Copy Worker File (Recommended)
 ```bash
-npm install @vvelediaz/react-pdf-viewer
+# Copy the PDF worker to your public directory
+cp node_modules/@vvelediaz/react-pdf-viewer/public/pdf.worker.min.js public/
+```
+
+### Method 2: Use setupPDFJS() Function
+```tsx
+import { setupPDFJS } from '@vvelediaz/react-pdf-viewer'
+
+// Call once in your app's entry point (main.tsx, index.tsx, or App.tsx)
+setupPDFJS() // Uses CDN fallback automatically
+```
+
+### Method 3: Custom Worker Path
+```tsx
+import { setupPDFJS } from '@vvelediaz/react-pdf-viewer'
+
+// Use a custom worker path
+setupPDFJS('https://your-cdn.com/pdf.worker.min.js')
 ```
 
 ## 🚀 Quick Start
@@ -160,14 +175,33 @@ module.exports = {
 
 ### Common Issues & Solutions
 
+#### ✅ "Worker File Not Found (404)" 
+**Solution**: Copy the worker file to your public directory:
+```bash
+cp node_modules/@vvelediaz/react-pdf-viewer/public/pdf.worker.min.js public/
+```
+
+#### ✅ "Failed to fetch dynamically imported module"
+**Solution**: Use the setupPDFJS() function with CDN fallback:
+```tsx
+import { setupPDFJS } from '@vvelediaz/react-pdf-viewer'
+setupPDFJS() // Automatically uses CDN if local file not found
+```
+
+#### ✅ "MIME type errors"
+**Solution**: Ensure your server serves .js files with correct MIME type, or use CDN:
+```tsx
+setupPDFJS('https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.js')
+```
+
 #### ✅ "No CORS Errors" 
-**Fixed**: Component uses local worker files automatically.
+**Fixed**: Component uses local worker files with CDN fallback automatically.
 
 #### ✅ "No Version Mismatches"
 **Fixed**: Automatic version matching between react-pdf and PDF.js worker.
 
 #### ✅ "No Configuration Required"
-**Fixed**: Zero-config setup works out of the box.
+**Fixed**: Zero-config setup works out of the box with automatic fallbacks.
 
 #### ✅ "No React Externalization Errors"
 **Fixed**: Package now ships as compiled JavaScript instead of raw TypeScript, eliminating Vite externalization issues.
@@ -487,7 +521,7 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🔗 Links
 
-- **[JSR Package](https://jsr.io/@vvelediaz/react-pdf-viewer)** - Official package registry
+- **[npm Package](https://www.npmjs.com/package/@vvelediaz/react-pdf-viewer)** - Official package registry
 - **[GitHub Repository](https://github.com/yourusername/react-pdf-viewer)** - Source code and issues
 - **[React PDF](https://github.com/wojtekmaj/react-pdf)** - Underlying PDF rendering library
 - **[PDF.js](https://mozilla.github.io/pdf.js/)** - Mozilla's PDF rendering engine

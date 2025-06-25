@@ -1,10 +1,10 @@
 # Publishing Guide
 
-This guide explains how to publish the `@vvelediaz/react-pdf-viewer` package to JSR and npm.
+This guide explains how to publish the `@vvelediaz/react-pdf-viewer` package to npm.
 
 ## Prerequisites
 
-1. **JSR Account**: Sign up at [jsr.io](https://jsr.io)
+1. **npm Account**: Sign up at [npmjs.com](https://npmjs.com)
 2. **GitHub Repository**: Your code should be in a public GitHub repository
 3. **Bun CLI**: Install the Bun CLI for building and publishing
 
@@ -12,19 +12,11 @@ This guide explains how to publish the `@vvelediaz/react-pdf-viewer` package to 
 
 ### 1. Update Configuration Files
 
-#### Update `jsr.json`
-```json
-{
-  "name": "@vvelediaz/react-pdf-viewer",
-  "version": "1.0.0"
-}
-```
-Replace `@vvelediaz` with your actual JSR scope name.
-
 #### Update `package.json`
 ```json
 {
   "name": "@vvelediaz/react-pdf-viewer",
+  "version": "1.0.0",
   "author": "Your Name <your.email@example.com>",
   "repository": {
     "type": "git",
@@ -65,27 +57,7 @@ bun run dev
 
 **Important**: The `predev` script automatically copies the correct PDF.js worker file to avoid version mismatches and CORS issues.
 
-## Publishing to JSR
-
-### 1. Install JSR CLI
-```bash
-# Install JSR CLI globally
-npm install -g @jsr/cli
-# or
-bun add -g @jsr/cli
-```
-
-### 2. Authenticate
-```bash
-jsr auth
-```
-
-### 3. Publish
-```bash
-jsr publish
-```
-
-## Publishing to npm (Optional)
+## Publishing to npm
 
 ### 1. Build for npm
 ```bash
@@ -118,7 +90,7 @@ git push origin v1.0.0
 
 ### 3. Update Documentation
 - Update README.md with the correct package name
-- Add badge links for JSR/npm
+- Add badge links for npm
 - Update installation instructions
 - Verify all examples work with the published version
 - Test zero-config setup and automatic worker management
@@ -127,29 +99,32 @@ git push origin v1.0.0
 
 ### Patch Release (1.0.1)
 ```bash
-# Update version in jsr.json and package.json
-jsr publish
+# Update version in package.json
+npm version patch
+npm publish
 ```
 
 ### Minor Release (1.1.0)
 ```bash
-# Update version in jsr.json and package.json
-jsr publish
+# Update version in package.json
+npm version minor
+npm publish
 ```
 
 ### Major Release (2.0.0)
 ```bash
-# Update version in jsr.json and package.json
+# Update version in package.json
 # Update CHANGELOG.md with breaking changes
-jsr publish
+npm version major
+npm publish
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Scope not found**: Make sure you've created the scope on JSR
-2. **Permission denied**: Ensure you're authenticated with JSR
+1. **Scope not found**: Make sure you've created the scope on npm
+2. **Permission denied**: Ensure you're authenticated with npm
 3. **Type errors**: Run `bun run type-check` to fix TypeScript issues
 4. **Missing files**: Check the `files` array in package.json
 5. **Worker file issues**: Ensure `copy-worker` script runs before build
@@ -157,12 +132,11 @@ jsr publish
 
 ### Getting Help
 
-- [JSR Documentation](https://jsr.io/docs)
+- [npm Documentation](https://docs.npmjs.com/)
 - [GitHub Issues](https://github.com/yourusername/react-pdf-viewer/issues)
 
 ## Checklist
 
-- [ ] Updated scope name in jsr.json
 - [ ] Updated author info in package.json
 - [ ] Updated repository URLs
 - [ ] Worker files properly configured (`bun run copy-worker`)
@@ -170,9 +144,9 @@ jsr publish
 - [ ] Type checking passes
 - [ ] Zero-config setup tested locally
 - [ ] All examples work without manual configuration
-- [ ] Created JSR account and scope
-- [ ] Authenticated with JSR CLI
-- [ ] Published to JSR
+- [ ] Created npm account
+- [ ] Authenticated with npm CLI
+- [ ] Published to npm
 - [ ] Tagged the release
 - [ ] Created GitHub release
 - [ ] Updated documentation with latest features

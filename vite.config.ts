@@ -25,13 +25,19 @@ export default defineConfig({
 			fileName: (format) => `react-pdf-viewer.${format}.js`
 		},
 		rollupOptions: {
-			// Externalize peer dependencies
-			external: ['react', 'react-dom', 'react/jsx-runtime', 'react-pdf'],
+			// Externalize peer dependencies but handle jsx-runtime properly
+			external: (id) => {
+				// For browser builds, don't externalize jsx-runtime
+				if (id === 'react/jsx-runtime') {
+					return false // Bundle jsx-runtime
+				}
+				// Externalize other React dependencies
+				return ['react', 'react-dom', 'react-pdf'].includes(id)
+			},
 			output: {
 				globals: {
 					react: 'React',
 					'react-dom': 'ReactDOM',
-					'react/jsx-runtime': 'jsxRuntime',
 					'react-pdf': 'ReactPDF'
 				}
 			}

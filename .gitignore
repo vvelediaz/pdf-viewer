@@ -60,4 +60,4 @@ Thumbs.db
 pids
 *.pid
 *.seed
-*.pid.lock
+*.pid.lockexamples/
