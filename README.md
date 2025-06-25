@@ -169,6 +169,12 @@ module.exports = {
 #### ✅ "No Configuration Required"
 **Fixed**: Zero-config setup works out of the box.
 
+#### ✅ "No React Externalization Errors"
+**Fixed**: Package now ships as compiled JavaScript instead of raw TypeScript, eliminating Vite externalization issues.
+
+**Previous Error**: `Module "npm:react@^18.2.0" has been externalized for browser compatibility`
+**Solution**: The package is now properly built as a library with React as an external dependency.
+
 #### PDF Not Loading
 **Solutions**:
 1. Check file path/URL is correct

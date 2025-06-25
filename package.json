@@ -1,22 +1,23 @@
 {
 	"name": "@vvelediaz/react-pdf-viewer",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "A modern, lightweight React PDF viewer component featuring zoom controls, page navigation, and responsive design",
 	"type": "module",
-	"main": "./mod.ts",
-	"module": "./mod.ts",
-	"types": "./mod.ts",
+	"main": "./dist/react-pdf-viewer.cjs.js",
+	"module": "./dist/react-pdf-viewer.es.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"types": "./mod.ts",
-			"import": "./mod.ts"
+			"types": "./dist/index.d.ts",
+			"import": "./dist/react-pdf-viewer.es.js",
+			"require": "./dist/react-pdf-viewer.cjs.js"
 		},
-		"./types": "./src/types/pdf.ts",
+		"./types": "./dist/types/pdf.d.ts",
 		"./css": "./src/components/PDFViewer.css"
 	},
 	"files": [
-		"mod.ts",
-		"src/",
+		"dist/",
+		"src/components/PDFViewer.css",
 		"README.md",
 		"LICENSE"
 	],
@@ -46,8 +47,9 @@
 		"copy-worker": "cp node_modules/react-pdf/node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js",
 		"predev": "bun run copy-worker",
 		"dev": "vite",
-		"build": "tsc",
-		"build:lib": "tsc && cp src/components/PDFViewer.css dist/src/components/",
+		"build": "vite build",
+		"build:types": "tsc --emitDeclarationOnly --outDir dist",
+		"build:lib": "bun run build && bun run build:types && cp src/components/PDFViewer.css dist/ && cp dist/components/index.d.ts dist/index.d.ts && sed -i '' 's|\\.\\./types/pdf|./types/pdf|g; s|\\./PDFViewer|./components/PDFViewer|g' dist/index.d.ts",
 		"preview": "vite preview",
 		"type-check": "tsc --noEmit",
 		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

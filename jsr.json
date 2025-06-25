@@ -1,11 +1,17 @@
 {
 	"name": "@vvelediaz/react-pdf-viewer",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"exports": {
-		".": "./mod.ts",
-		"./types": "./src/types/pdf.ts"
+		".": "./dist/react-pdf-viewer.es.js",
+		"./types": "./dist/types/pdf.d.ts"
 	},
 	"publish": {
+		"include": [
+			"dist/**",
+			"src/components/PDFViewer.css",
+			"README.md",
+			"LICENSE"
+		],
 		"exclude": [
 			"public/**",
 			"index.html",
@@ -13,9 +19,9 @@
 			"src/App.tsx",
 			"src/App.css",
 			"src/index.css",
-			"src/components/PDFViewer.css",
 			"vite.config.ts",
-			"index.ts"
+			"index.ts",
+			"mod.ts"
 		]
 	}
 }
